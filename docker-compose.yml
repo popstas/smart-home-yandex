@@ -1,0 +1,13 @@
+version: '2.1'
+
+services:
+  app:
+    image: popstas/yandex-dialogs-smarthome-mqtt:v1.0.0
+    build: .
+    restart: always
+    environment:
+      NODE_ENV: production
+    volumes:
+      - $PWD/src/config.js:/app/src/config.js
+    ports:
+      - 5554:5554
