@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.all('/', (req, res) => {
-  console.log('ping');
+  // console.log('ping');
   res.send('OK');
 });
 
