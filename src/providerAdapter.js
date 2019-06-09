@@ -1,6 +1,35 @@
 const express = require('express');
 const router = express.Router();
 
+// validate token
+router.use((req, res, next) => {
+  if(req.path === '/'){
+    next();
+    return;
+  }
+
+  if(!req.headers.authorization){
+    res.status(401);
+    res.send('No authorization headers');
+    return;
+  }
+
+  const token = req.headers.authorization.replace('Bearer ', '');
+  // console.log('token: ', token);
+  // console.log('global.users.data: ', global.users.data);
+
+  const user = global.users.find('access_token', token);
+  if(user.length == 0){
+    res.status(401);
+    res.send('Unauthorized access');
+  } else if(user[0].expires_at > new Date().getTime() / 1000) {
+    res.status(401);
+    res.send('Token expired');
+  } else {
+    next();
+  }
+});
+
 router.all('/', (req, res) => {
   // console.log('ping');
   res.send('OK');
@@ -52,6 +81,15 @@ router.post('/v1.0/user/devices/action', (req, res) => {
     r.payload.devices.push({ id: id, capabilities: capabilities });
   }
   res.send(r);
+});
+
+router.post('/v1.0/user/unlink', (req, res) => {
+  console.log('/v1.0/user/unlink');
+  const token = req.headers.authorization.replace('Bearer ', '');
+  const found = global.users.find('access_token', token);
+  console.log('found: ', found);
+  if(found) global.users.remove(found);
+  res.status(200);
 });
 
 module.exports = router;

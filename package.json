@@ -4,9 +4,14 @@
   "description": "Provider Adapter API with dummy Auth server for connect MQTT devices to Yandex Smarthome.",
   "main": "app.js",
   "dependencies": {
+    "axios": "^0.19.0",
     "express": "^4.17.1",
+    "lokijs": "^1.5.6",
     "morgan": "^1.9.1",
-    "mqtt": "^2.18.8"
+    "mqtt": "^2.18.8",
+    "passport": "^0.4.0",
+    "passport-yandex": "0.0.3",
+    "querystring": "^0.2.0"
   },
   "devDependencies": {
     "conventional-changelog-cli": "^2.0.11",

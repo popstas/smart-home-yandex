@@ -1,9 +1,35 @@
 const mqtt = require('mqtt');
+const loki = require('lokijs');
 const api = require('./restApi');
-
-// устройства хранятся в global.devices, он должен идти перед подключением config
-global.devices = [];
+const device = require('./device');
 const config = require('./config');
+
+global.devices = [];
+
+global.db = new loki(config.db.path, {
+  autoload: true,
+  autosave: true,
+  autosaveInterval: 5000,
+  autoloadCallback() {
+    global.auth = global.db.getCollection('auth');
+    if (global.auth === null) {
+      global.auth = global.db.addCollection('auth');
+    }
+
+    global.users = global.db.getCollection('users');
+    if (global.users === null) {
+      global.users = global.db.addCollection('users');
+    }
+    console.log('global.users.data: ', global.users.data.length);
+  }
+});
+
+
+if(config.devices) {
+  config.devices.forEach(opts => {
+    new device(opts);
+  });
+}
 
 new api();
 
@@ -32,8 +58,8 @@ if (statPairs) {
     console.log('MQTT connected to ' + config.mqtt.host);
     client.subscribe(statPairs.map(pair => pair.topic));
     client.on('message', (topic, message) => {
-      const matchedDeviceId = statPairs.findIndex(pair => topic.toLowerCase() != pair.topic.toLowerCase());
-      if (!matchedDeviceId) return;
+      const matchedDeviceId = statPairs.findIndex(pair => topic.toLowerCase() === pair.topic.toLowerCase());
+      if (matchedDeviceId == -1) return;
 
       const device = global.devices.find(device => device.data.id == matchedDeviceId);
       const val = ['on', '1', 'true'].includes(message.toString().toLowerCase());
