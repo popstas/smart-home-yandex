@@ -1,0 +1,2 @@
+POST http://localhost:5554/provider/v1.0/user/unlink
+X-Request-Id: 123545

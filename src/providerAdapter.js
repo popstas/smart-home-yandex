@@ -6,7 +6,7 @@ router.all('/', (req, res) => {
   res.send('OK');
 });
 
-router.all('/v1.0', (req, res) => {
+router.get('/v1.0', (req, res) => {
   // console.log('ping');
   res.send('OK');
 });
@@ -57,6 +57,12 @@ router.post('/v1.0/user/devices/action', (req, res) => {
     r.payload.devices.push({ id: id, capabilities: capabilities });
   }
   res.send(r);
+});
+
+router.post('/v1.0/user/unlink', (req, res) => {
+  console.log('/v1.0/user/unlink');
+  res.json({ request_id: '1' });
+  res.status(200);
 });
 
 module.exports = router;
