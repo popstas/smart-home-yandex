@@ -17,6 +17,7 @@ router.get('/v1.0', (req, res) => {
 
 router.get('/v1.0/user/devices', (req, res) => {
   console.log('/v1.0/user/devices');
+  global.updateDevices();
   var r = {
     request_id: req.headers['x-request-id'],
     payload: {

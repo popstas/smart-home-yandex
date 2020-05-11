@@ -1,15 +1,26 @@
+const path = require('path');
 const mqtt = require('mqtt');
 const api = require('./restApi');
 const device = require('./device');
+const config = require('./config');
 
 // устройства хранятся в global.devices
+global.updateDevices = () => {
+  // clear cache
+  const filename = path.resolve('./src/config.js');
+  delete require.cache[filename];
+
+  const config = require('./config');
+  global.devices = [];
+  if(config.devices) {
+    config.devices.forEach(opts => {
+      new device(opts);
+    });
+  }
+};
+
 global.devices = [];
-const config = require('./config');
-if(config.devices) {
-  config.devices.forEach(opts => {
-    new device(opts);
-  });
-}
+global.updateDevices();
 
 new api();
 
