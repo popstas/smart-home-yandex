@@ -39,7 +39,7 @@ if (statPairs) {
     client.subscribe(statPairs.map(pair => pair.topic));
     client.on('message', (topic, message) => {
       const matchedDeviceId = statPairs.findIndex(pair => topic.toLowerCase() != pair.topic.toLowerCase());
-      if (!matchedDeviceId) return;
+      if (matchedDeviceId === -1) return;
 
       const device = global.devices.find(device => device.data.id == matchedDeviceId);
       const val = ['on', '1', 'true'].includes(message.toString().toLowerCase());
