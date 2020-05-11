@@ -38,10 +38,10 @@ if (statPairs) {
     console.log('MQTT connected to ' + config.mqtt.host);
     client.subscribe(statPairs.map(pair => pair.topic));
     client.on('message', (topic, message) => {
-      const matchedDeviceId = statPairs.findIndex(pair => topic.toLowerCase() != pair.topic.toLowerCase());
-      if (matchedDeviceId === -1) return;
+      const matchedPair = statPairs.find(pair => topic.toLowerCase() === pair.topic.toLowerCase());
+      if (!matchedPair) return;
 
-      const device = global.devices.find(device => device.data.id == matchedDeviceId);
+      const device = global.devices.find(device => device.data.id == matchedPair.deviceId);
       const val = ['on', '1', 'true'].includes(message.toString().toLowerCase());
 
       device.data.capabilities[0].state.value = val;
