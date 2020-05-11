@@ -14,7 +14,7 @@ router.get('/v1.0', (req, res) => {
 router.get('/v1.0/user/devices', (req, res) => {
   console.log('/v1.0/user/devices');
   var r = {
-    request_id: "1",
+    request_id: req.headers['x-request-id'],
     payload: {
       user_id: "1",
       devices: []
@@ -29,7 +29,7 @@ router.get('/v1.0/user/devices', (req, res) => {
 router.post('/v1.0/user/devices/query', (req, res) => {
   console.log('/v1.0/user/devices/query', req.body);
   const r = {
-    request_id: '1',
+    request_id: req.headers['x-request-id'],
     payload: {
       devices: []
     }
@@ -46,7 +46,7 @@ router.post('/v1.0/user/devices/action', (req, res) => {
   console.log('/v1.0/user/devices/action:', req.body.payload.devices);
   // console.log('global.devices: ', global.devices);
   var r = {
-    request_id: "1",
+    request_id: req.headers['x-request-id'],
     payload: {
       devices: []
     }
@@ -61,7 +61,7 @@ router.post('/v1.0/user/devices/action', (req, res) => {
 
 router.post('/v1.0/user/unlink', (req, res) => {
   console.log('/v1.0/user/unlink');
-  res.json({ request_id: '1' });
+  res.json({ request_id: req.headers['x-request-id'] });
   res.status(200);
 });
 
