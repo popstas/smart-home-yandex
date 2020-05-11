@@ -1,9 +1,15 @@
 const mqtt = require('mqtt');
 const api = require('./restApi');
+const device = require('./device');
 
-// устройства хранятся в global.devices, он должен идти перед подключением config
+// устройства хранятся в global.devices
 global.devices = [];
 const config = require('./config');
+if(config.devices) {
+  config.devices.forEach(opts => {
+    new device(opts);
+  });
+}
 
 new api();
 
