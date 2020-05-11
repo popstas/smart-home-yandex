@@ -6,6 +6,11 @@ router.all('/', (req, res) => {
   res.send('OK');
 });
 
+router.all('/v1.0', (req, res) => {
+  // console.log('ping');
+  res.send('OK');
+});
+
 router.get('/v1.0/user/devices', (req, res) => {
   console.log('/v1.0/user/devices');
   var r = {
