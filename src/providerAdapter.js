@@ -40,9 +40,14 @@ router.post('/v1.0/user/devices/query', (req, res) => {
     }
   };
   for (let requestDevice of req.body.devices) {
-    const device =getDeviceById(requestDevice.id);
-    if(!device) continue;
-    r.payload.devices.push(device.getInfo());
+    const device = getDeviceById(requestDevice.id);
+    if(device) {
+      r.payload.devices.push(device.getInfo());
+    } else {
+      requestDevice.error_code = 'DEVICE_NOT_FOUND';
+      requestDevice.error_message = 'Устройство не найдено';
+      r.payload.devices.push(requestDevice);
+    }
     // console.log(global.devices[req.body.devices[i].id].getInfo());
   }
   // console.log(JSON.stringify(r));
@@ -60,11 +65,15 @@ router.post('/v1.0/user/devices/action', (req, res) => {
   };
   for (let requestDevice of req.body.payload.devices) {
     const device = getDeviceById(requestDevice.id);
-    if(!device) continue;
-
-    const id = device.data.id;
-    const capabilities = device.setState(requestDevice.capabilities[0].state.value);
-    r.payload.devices.push({ id, capabilities });
+    if(device) {
+      const id = device.data.id;
+      const capabilities = device.setState(requestDevice.capabilities[0].state.value);
+      r.payload.devices.push({ id, capabilities });
+    } else {
+      requestDevice.error_code = 'DEVICE_NOT_FOUND';
+      requestDevice.error_message = 'Устройство не найдено';
+      r.payload.devices.push(requestDevice);
+    }
   }
   res.send(r);
 });
