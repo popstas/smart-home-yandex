@@ -9,5 +9,6 @@ services:
       NODE_ENV: production
     volumes:
       - $PWD/src/config.js:/app/src/config.js
+      - $PWD/data/:/app/data/
     ports:
       - 5554:5554
