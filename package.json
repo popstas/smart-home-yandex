@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
+    "md5": "^2.2.1",
     "morgan": "^1.9.1",
     "mqtt": "^2.18.8"
   },
