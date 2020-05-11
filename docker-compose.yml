@@ -2,7 +2,7 @@ version: '2.1'
 
 services:
   app:
-    image: popstas/yandex-dialogs-smarthome-mqtt:v1.0.0
+    image: popstas/yandex-dialogs-smarthome-mqtt:v1.1.0
     build: .
     restart: always
     environment:
