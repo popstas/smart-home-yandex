@@ -2,7 +2,6 @@ const md5 = require('md5');
 
 class device {
   constructor(options) {
-    // this.client = client;
     this.data = {
       id: '',
       name: options.name || 'Без названия',
@@ -38,7 +37,7 @@ class device {
     const topic = this.data.custom_data.mqtt.set || false;
     if (topic) {
       console.log(`mqtt: ${topic} ${s}`);
-      this.client.publish(topic, int);
+      global.client.publish(topic, int);
     }
 
     const capabilities = this.data.capabilities;

@@ -17,6 +17,18 @@ global.updateDevices = () => {
       new device(opts);
     });
   }
+
+  // чтобы не добавлять в конфиг инстанс mqtt client, это делается здесь:
+  // если есть device.data.custom_data.mqtt.stat, слушаем изменения состояния устройства
+  // формат прошивки tasmota (должно приходить ON/1/true или OFF/0/false)
+  global.statPairs = [];
+  global.devices.forEach(device => {
+    const statTopic = device.data.custom_data.mqtt.stat || false;
+    if (statTopic) {
+      statPairs.push({ deviceId: device.data.id, topic: statTopic });
+    }
+  });
+
 };
 
 global.devices = [];
@@ -30,26 +42,14 @@ const client = mqtt.connect(`mqtt://${config.mqtt.host}`, {
   username: config.mqtt.user,
   password: config.mqtt.password
 });
+global.client = client;
 
-// чтобы не добавлять в конфиг инстанс mqtt client, это делается здесь:
-// если есть device.data.custom_data.mqtt.stat, слушаем изменения состояния устройства
-// формат прошивки tasmota (должно приходить ON/1/true или OFF/0/false)
-const statPairs = [];
-global.devices.forEach(device => {
-  device.client = client; // передаём клиент в каждый инстанс
-
-  const statTopic = device.data.custom_data.mqtt.stat || false;
-  if (statTopic) {
-    statPairs.push({ deviceId: device.data.id, topic: statTopic });
-  }
-});
-
-if (statPairs) {
+if (global.statPairs) {
   client.on('connect', () => {
     console.log('MQTT connected to ' + config.mqtt.host);
-    client.subscribe(statPairs.map(pair => pair.topic));
+    client.subscribe(global.statPairs.map(pair => pair.topic));
     client.on('message', (topic, message) => {
-      const matchedPair = statPairs.find(pair => topic.toLowerCase() === pair.topic.toLowerCase());
+      const matchedPair = global.statPairs.find(pair => topic.toLowerCase() === pair.topic.toLowerCase());
       if (!matchedPair) return;
 
       const device = global.devices.find(device => device.data.id == matchedPair.deviceId);
