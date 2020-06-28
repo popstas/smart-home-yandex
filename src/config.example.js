@@ -48,7 +48,30 @@ module.exports = {
           set: 'cmnd/kitchen/tv/volume',
           stat: '',
         }
-      }
+      },
+      capabilities: [
+        {
+          type: 'devices.capabilities.on_off',
+          retrievable: true,
+          state: {
+            instance: 'on',
+            value: false
+          }
+        },
+        {
+          type: 'devices.capabilities.range',
+          retrievable: true,
+          parameters: {
+            instance: 'volume',
+            min: 0,
+            max: 100
+          },
+          state: {
+            instance: 'volume',
+            value: 25
+          }
+        },
+      ]
     }
   ]
 }
