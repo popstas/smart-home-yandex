@@ -11,7 +11,7 @@ class device {
       custom_data: {
         mqtt: options.mqtt || {}
       },
-      capabilities: [
+      capabilities: options.capabilities || [
         {
           type: 'devices.capabilities.on_off',
           retrievable: true,
@@ -26,25 +26,41 @@ class device {
     this.data.id = md5(this.data.name + this.data.room);
     global.devices.push(this);
   }
+
+  getCapabilityByType(type) {
+    return this.data.capabilities.find(cap => cap.type === type);
+  }
+
   getInfo() {
     return this.data;
   }
-  setState(val) {
-    const s = val ? 'on' : 'off';
-    const int = val ? '1' : '0';
-    // this.data.capabilities[0].state.instance = s;
-    this.data.capabilities[0].state.value = val;
-    const topic = this.data.custom_data.mqtt.set || false;
+
+  // принимает capability.state, возвращает capability
+  setState(capability) {
+    let int, topic;
+    const deviceCapability = this.getCapabilityByType(capability.type);
+    deviceCapability.state.value = capability.state.value;
+
+    switch(capability.state.instance) {
+      case 'on':
+        int = capability.state.value ? '1' : '0';
+        topic = this.data.custom_data.mqtt.set || false;
+        break;
+
+      default:
+        int = JSON.stringify(capability.state.value);
+        topic = this.data.custom_data.mqtt[capability.state.instance].set || false;
+    }
+
     if (topic) {
-      console.log(`mqtt: ${topic} ${s}`);
+      console.log(`mqtt: ${topic} ${int}`);
       global.client.publish(topic, int);
     }
 
-    const capabilities = this.data.capabilities;
-    capabilities[0].state.action_result = {
+    deviceCapability.state.action_result = {
       status: 'DONE'
     };
-    return capabilities;
+    return deviceCapability;
   }
 }
 module.exports = device;

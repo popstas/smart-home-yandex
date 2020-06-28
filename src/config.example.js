@@ -35,6 +35,20 @@ module.exports = {
         set: 'cmnd/kitchen/fan/power',
         stat: 'stat/kitchen/fan/power'
       }
+    },
+
+    {
+      name: 'Телевизор',
+      room: 'Кухня',
+      type: 'devices.types.media_device',
+      mqtt: {
+        set: 'cmnd/kitchen/tv/power',
+        stat: 'stat/kitchen/tv/power',
+        volume: {
+          set: 'cmnd/kitchen/tv/volume',
+          stat: '',
+        }
+      }
     }
   ]
 }

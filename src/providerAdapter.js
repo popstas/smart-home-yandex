@@ -67,7 +67,11 @@ router.post('/v1.0/user/devices/action', (req, res) => {
     const device = getDeviceById(requestDevice.id);
     if(device) {
       const id = device.data.id;
-      const capabilities = device.setState(requestDevice.capabilities[0].state.value);
+      const capabilities = [];
+      for(capability of requestDevice.capabilities) {
+        const resCapability = device.setState(capability);
+        capabilities.push(resCapability);
+      }
       r.payload.devices.push({ id, capabilities });
     } else {
       requestDevice.error_code = 'DEVICE_NOT_FOUND';
