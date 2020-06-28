@@ -1,3 +1,12 @@
+## [1.1.1](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.1.0...v1.1.1) (2020-06-28)
+
+
+### Bug Fixes
+
+* добавленные без перезапуска устройства теперь сразу работают ([8707247](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/commit/8707247))
+
+
+
 # [1.1.0](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.0.0...v1.1.0) (2020-05-11)
 
 
