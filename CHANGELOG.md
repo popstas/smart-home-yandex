@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.1.1...v1.2.0) (2020-06-28)
+
+
+### Features
+
+* поддержка разных умений устройств, поддержка одновременного изменения нескольких умений ([6818b23](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/commit/6818b23))
+
+
+
 ## [1.1.1](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.1.0...v1.1.1) (2020-06-28)
 
 
