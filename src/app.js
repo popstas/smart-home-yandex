@@ -18,14 +18,33 @@ global.updateDevices = () => {
     });
   }
 
-  // чтобы не добавлять в конфиг инстанс mqtt client, это делается здесь:
+
+  // заменяем {set, stat} на {on: {set, stat}}
+  global.devices.forEach(device => {
+    const onInstance = { set: '', stat: '' };
+    for (let topic in onInstance) {
+      if (device.data.custom_data.mqtt[topic] !== undefined) {
+        onInstance[topic] = device.data.custom_data.mqtt[topic];
+        delete device.data.custom_data.mqtt[topic];
+      }
+    }
+
+    if (device.getCapabilityByType('devices.capabilities.on_off')) {
+      device.data.custom_data.mqtt.on = onInstance;
+    }
+  });
+
   // если есть device.data.custom_data.mqtt.stat, слушаем изменения состояния устройства
   // формат прошивки tasmota (должно приходить ON/1/true или OFF/0/false)
   global.statPairs = [];
   global.devices.forEach(device => {
-    const statTopic = device.data.custom_data.mqtt.stat || false;
-    if (statTopic) {
-      statPairs.push({ deviceId: device.data.id, topic: statTopic });
+    for (let instance in device.data.custom_data.mqtt) {
+      const topics = device.data.custom_data.mqtt[instance];
+
+      const statTopic = topics.stat || false;
+      if (statTopic) {
+        statPairs.push({ deviceId: device.data.id, topic: statTopic, instance: instance });
+      }
     }
   });
 
@@ -53,10 +72,25 @@ if (global.statPairs) {
       if (!matchedPair) return;
 
       const device = global.devices.find(device => device.data.id == matchedPair.deviceId);
-      const val = ['on', '1', 'true'].includes(message.toString().toLowerCase());
+      const instance = matchedPair.instance;
+      const capability = device.getCapabilityByInstance(instance);
 
-      device.data.capabilities[0].state.value = val;
-      console.log(`update device ${device.data.name} (${device.data.room}) state: `, device.data.capabilities[0].state);
+      let val;
+      switch(instance) {
+        case 'on':
+          val = ['on', '1', 'true'].includes(message.toString().toLowerCase());
+          break;
+
+        case 'volume':
+          val = parseInt(message.toString());
+          break;
+
+        default:
+          val = message.toString().toLowerCase();
+      }
+
+      capability.state.value = val;
+      console.log(`update device ${device.data.name} (${device.data.room}) state: `, capability.state);
     });
   });
 

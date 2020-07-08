@@ -31,6 +31,10 @@ class device {
     return this.data.capabilities.find(cap => cap.type === type);
   }
 
+  getCapabilityByInstance(instance) {
+    return this.data.capabilities.find(cap => cap.state && cap.state.instance === instance);
+  }
+
   getInfo() {
     return this.data;
   }
@@ -44,7 +48,7 @@ class device {
     switch(capability.state.instance) {
       case 'on':
         int = capability.state.value ? '1' : '0';
-        topic = this.data.custom_data.mqtt.set || false;
+        topic = this.data.custom_data.mqtt[capability.state.instance].set || false;
         break;
 
       default:
@@ -57,6 +61,7 @@ class device {
       global.client.publish(topic, int);
     }
 
+    // возможно, надо возвращать на уровень выше - https://yandex.ru/dev/dialogs/alice/doc/smart-home/reference/post-action-docpage/
     deviceCapability.state.action_result = {
       status: 'DONE'
     };

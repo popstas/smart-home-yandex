@@ -50,7 +50,7 @@ router.post('/v1.0/user/devices/query', (req, res) => {
     }
     // console.log(global.devices[req.body.devices[i].id].getInfo());
   }
-  // console.log(JSON.stringify(r));
+  // console.log(JSON.stringify(r, null, '  '));
   res.send(r);
 });
 
