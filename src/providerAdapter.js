@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const getDeviceById = id => {
-  return global.devices.find(dev => dev.data.id === id);
-}
-
 router.all('/', (req, res) => {
   // console.log('ping');
   res.send('OK');
@@ -33,6 +29,7 @@ router.get('/v1.0/user/devices', (req, res) => {
 
 router.post('/v1.0/user/devices/query', (req, res) => {
   console.log('/v1.0/user/devices/query', req.body);
+  global.updateDevices();
   const r = {
     request_id: req.headers['x-request-id'],
     payload: {
@@ -40,7 +37,7 @@ router.post('/v1.0/user/devices/query', (req, res) => {
     }
   };
   for (let requestDevice of req.body.devices) {
-    const device = getDeviceById(requestDevice.id);
+    const device = global.getDeviceById(requestDevice.id);
     if(device) {
       r.payload.devices.push(device.getInfo());
     } else {
@@ -64,11 +61,11 @@ router.post('/v1.0/user/devices/action', (req, res) => {
     }
   };
   for (let requestDevice of req.body.payload.devices) {
-    const device = getDeviceById(requestDevice.id);
+    const device = global.getDeviceById(requestDevice.id);
     if(device) {
       const id = device.data.id;
       const capabilities = [];
-      for(capability of requestDevice.capabilities) {
+      for(let capability of requestDevice.capabilities) {
         const resCapability = device.setState(capability);
         capabilities.push(resCapability);
       }

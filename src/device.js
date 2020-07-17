@@ -20,11 +20,16 @@ class device {
             value: false
           }
         }
-      ]
+      ],
+      properties: options.properties || []
     };
 
     this.data.id = md5(this.data.name + this.data.room);
     global.devices.push(this);
+  }
+
+  getDeviceById(id) {
+    return global.devices.find(cap => cap.type === type);
   }
 
   getCapabilityByType(type) {
@@ -32,7 +37,11 @@ class device {
   }
 
   getCapabilityByInstance(instance) {
-    return this.data.capabilities.find(cap => cap.state && cap.state.instance === instance);
+    return this.data.capabilities.find(item => item.state && item.state.instance === instance);
+  }
+
+  getPropertyByInstance(instance) {
+    return this.data.properties.find(item => item.state && item.state.instance === instance);
   }
 
   getInfo() {
