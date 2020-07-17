@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.2.0...v1.3.0) (2020-07-17)
+
+
+### Bug Fixes
+
+* правильное прослушивание изменения состояний разных устройств ([a741c37](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/commit/a741c37))
+* сохранение state при обновлении списка устройств ([8f9ddca](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/commit/8f9ddca))
+
+
+### Features
+
+* поддержка properties (встроенные датчики) ([cabe741](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/commit/cabe741))
+
+
+
 # [1.2.0](https://github.com/popstas/yandex-dialogs-smarthome-mqtt/compare/v1.1.1...v1.2.0) (2020-06-28)
 
 
