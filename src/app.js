@@ -132,11 +132,11 @@ if (global.statPairs) {
 
         if (capability) {
           capability.state.value = val;
-          console.log(`update device ${device.data.name} (${device.data.room}) capability: `, capability.state);
+          // console.log(`update device ${device.data.name} (${device.data.room}) capability: `, capability.state);
         }
         if (property) {
           property.state.value = val;
-          console.log(`update device ${device.data.name} (${device.data.room}) property: `, property.state);
+          // console.log(`update device ${device.data.name} (${device.data.room}) property: `, property.state);
         }
       }
     });
